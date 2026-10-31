@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agentree — Sub-Agent Orchestrator · Chen Zhifeng</title>
+<meta name="description" content="A minimal multi-agent framework where agents recursively spawn sub-agents in isolated contexts, with a persistent team system.">
+<style>
+  :root{--bg:#0b1220;--bg2:#0f172a;--card:#111c2e;--line:#24334d;--fg:#e2e8f0;--muted:#94a3b8;--dim:#64748b;--accent:#34d399;--accent2:#38bdf8}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.65;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:980px;margin:0 auto;padding:0 24px}
+  nav{display:flex;justify-content:space-between;align-items:center;padding:18px 0;border-bottom:1px solid var(--line)}
+  nav a{color:var(--muted);font-size:14px}
+  nav .back{font-weight:700}
+  nav .back:hover{color:var(--accent)}
+  header{padding:48px 0 40px}
+  .meta{color:var(--dim);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+  h1{font-size:clamp(30px,5vw,46px);letter-spacing:-.02em;margin:10px 0 0}
+  .lede{color:var(--muted);font-size:18px;margin:16px 0 0;max-width:680px}
+  .pillrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}
+  .pill{background:#0c2018;border:1px solid #1f4d3a;color:var(--accent);font-size:12px;font-weight:600;padding:5px 12px;border-radius:999px}
+  .pill.b{background:#0c2330;border-color:#1f3d52;color:var(--accent2)}
+  section{padding:36px 0}
+  h2{font-size:22px;letter-spacing:-.01em;margin:0 0 14px}
+  h2 .num{color:var(--accent)}
+  p{color:var(--muted)}
+  .shot{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:14px 0;background:#000}
+  .shot img{display:block;width:100%;height:auto}
+  .tree svg{width:100%;height:auto;border:1px solid var(--line);border-radius:12px;background:#0b1220}
+  .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px}
+  .card b{color:var(--accent)}
+  .card p{font-size:14px;margin:6px 0 0;color:var(--muted)}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line)}
+  th{color:var(--dim);font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:.05em}
+  td{color:var(--muted)}
+  td b{color:var(--fg)}
+  code{background:#0c1830;border:1px solid #1e2d49;padding:2px 7px;border-radius:6px;font-size:13px;color:#7dd3fc;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  .run{background:#0a1424;border:1px solid var(--line);border-radius:10px;padding:16px 18px;overflow-x:auto}
+  .run code{background:none;border:none;color:#6ee7b7;padding:0;font-size:13.5px}
+  .cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:10px;font-weight:700;font-size:15px}
+  .btn.primary{background:var(--accent);color:#04231a}
+  .btn.primary:hover{background:#22c08a;text-decoration:none}
+  .btn.ghost{background:var(--card);color:var(--fg);border:1px solid var(--line)}
+  footer{border-top:1px solid var(--line);padding:30px 0 50px;color:var(--dim);font-size:14px}
+  @media(max-width:700px){.cards{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav class="wrap">
+  <a class="back" href="../index.html">← Back to portfolio</a>
+  <a href="https://github.com/" target="_blank" rel="noopener">GitHub →</a>
+</nav>
+
+<header class="wrap">
+  <div class="meta">★ Main project · Multi-Agent Orchestration</div>
+  <h1>Agentree — a multi-agent framework that spawns sub-agents</h1>
+  <p class="lede">Give an agent a task and it can <em>recursively spawn sub-agents</em> to tackle parts of it.
+  Each sub-agent runs in its own context — the parent only sees the final output. A persistent team system
+  mirrors how real agent teams collaborate: teammates, an inbox, a shared task board with dependencies.</p>
+  <div class="pillrow">
+    <span class="pill">Python · FastAPI</span>
+    <span class="pill">recursive spawn</span>
+    <span class="pill">context isolation</span>
+    <span class="pill">team system</span>
+    <span class="pill b">28 tests ✓</span>
+    <span class="pill b">Vue 3 dashboard</span>
+  </div>
+</header>
+
+<section class="wrap">
+  <h2><span class="num">01.</span> The idea</h2>
+  <p>Single-agent loops stall on long, parallelizable work. Agentree lets an agent decompose a task and
+  <b>fan out to sub-agents</b>, each running the same Agent loop with its own tools, steps, and context.
+  Three guardrails — <code>max_depth</code>, <code>max_steps</code>, <code>max_children</code> — cap runaway
+  recursion and token cost.</p>
+</section>
+
+<section class="wrap">
+  <h2><span class="num">02.</span> The agent tree</h2>
+  <div class="tree"><img src="../assets/agentree-tree.svg" alt="Recursive sub-agent tree: parent spawns three children in parallel, each with isolated context"></div>
+  <p style="margin-top:10px">A parent task fans out to parallel children; a child can itself spawn grandchildren
+  (depth 2), still bounded by the same limits. Tool results are truncated before backfill so a single runaway
+  call can't blow the parent's context.</p>
+</section>
+
+<section class="wrap">
+  <h2><span class="num">03.</span> It's real — screenshots</h2>
+  <p>The web dashboard (Vue 3 + Element Plus) shows the live agent tree as runs progress, plus a real-time event stream.</p>
+  <div class="shot"><img src="../assets/agentree-login.png" alt="Agentree login screen with demo-mode entry"></div>
+  <div class="shot"><img src="../assets/agentree-console.png" alt="Agentree console with new-run form and model/depth controls"></div>
+</section>
+
+<section class="wrap">
+  <h2><span class="num">04.</span> Core API</h2>
+  <div class="cards">
+    <div class="card"><b>run_agent(task, config, …)</b><p>Run an agent to a final answer. With spawn tools available, children recurse through this same function.</p></div>
+    <div class="card"><b>Team(emit, client)</b><p>A persistent team: <code>await team.run("task")</code>. Lead coordinates teammates via a shared task board.</p></div>
+    <div class="card"><b>@tool(name, description, parameters)</b><p>Register a custom tool. Tool descriptions are model-facing — you control what the agent can do.</p></div>
+    <div class="card"><b>AgentConfig</b><p><code>max_depth=2</code> · <code>max_steps=30</code> · <code>max_children=8</code> · <code>enable_web=True</code>.</p></div>
+  </div>
+</section>
+
+<section class="wrap">
+  <h2><span class="num">05.</span> HTTP API</h2>
+  <p>Drive agents over HTTP — no extra code to wire up.</p>
+  <table>
+    <tr><th>Method</th><th>Path</th><th>Purpose</th></tr>
+    <tr><td><b>POST</b></td><td><code>/api/runs</code></td><td>Start a single-agent run</td></tr>
+    <tr><td><b>POST</b></td><td><code>/api/team/runs</code></td><td>Start a team run</td></tr>
+    <tr><td><b>GET</b></td><td><code>/api/runs</code></td><td>List runs</td></tr>
+    <tr><td><b>GET</b></td><td><code>/api/runs/{id}</code></td><td>Run detail</td></tr>
+    <tr><td><b>PATCH</b></td><td><code>/api/runs/{id}</code></td><td>Rename a run</td></tr>
+    <tr><td><b>DELETE</b></td><td><code>/api/runs/{id}</code></td><td>Delete a run</td></tr>
+    <tr><td><b>POST</b></td><td><code>/api/runs/{id}/cancel</code></td><td>Cancel a running agent</td></tr>
+    <tr><td><b>GET</b></td><td><code>/api/runs/{id}/events</code></td><td>Live event stream (SSE)</td></tr>
+    <tr><td><b>POST</b></td><td><code>/api/auth/login</code></td><td>Login</td></tr>
+    <tr><td><b>GET</b></td><td><code>/api/auth/status</code></td><td>Auth / demo-mode status</td></tr>
+  </table>
+</section>
+
+<section class="wrap">
+  <h2><span class="num">06.</span> Run it</h2>
+  <p>Zero-cost, runs locally. Any OpenAI-compatible gateway works.</p>
+  <div class="run"><code># deps
+pip install fastapi uvicorn numpy scikit-learn
+
+# point at your LLM gateway
+export AGENTREE_API_KEY=sk-...
+export AGENTREE_BASE_URL=http://127.0.0.1:3065/v1
+export AGENTREE_MODEL=deepseek-v4-flash
+export AGENTREE_DEMO_AUTH=on
+
+# web server (dashboard on http://127.0.0.1:8767)
+python3 -m agentree.server --port 8767
+
+# or the CLI
+python3 -m agentree.cli "summarize this doc"
+
+# tests — 28 passing
+python3 -m pytest tests/ -q -p no:asyncio
+
+# or ship it as a container (multi-stage: builds the Vue frontend, serves via uvicorn)
+docker build -t agentree .
+docker run -p 8767:8767 agentree
+# → http://127.0.0.1:8767  (demo mode on by default)</code></div>
+  <p style="margin-top:10px"><b style="color:var(--accent)">Deployment-verified:</b> the Dockerfile above was built and run end-to-end
+  (image 181MB, frontend compiled in-container, API serving, demo login returning tokens). It's a real deployable, not a README claim.</p>
+</section>
+
+<section class="wrap">
+  <h2><span class="num">07.</span> Design decisions</h2>
+  <table>
+    <tr><th>Trade-off</th><th>Why</th></tr>
+    <tr><td><b>Recursion over frameworks</b></td><td>One Agent loop, reused at every depth — no combinatorial explosion of code paths.</td></tr>
+    <tr><td><b>Context isolation per child</b></td><td>Parent stays lean; a child's tool noise never leaks into the orchestrator.</td></tr>
+    <tr><td><b>Truncate tool results</b></td><td>Bounds tokens on the hot path — the #1 cost/latency killer in agent loops.</td></tr>
+    <tr><td><b>Team mirrors real teams</b></td><td>Persistent teammates + shared task board = the pattern production agent teams already use.</td></tr>
+    <tr><td><b>Zero-cost default</b></td><td>Runs on a local gateway; no cloud bill to demo.</td></tr>
+  </table>
+</section>
+
+<section class="wrap">
+  <div class="cta">
+    <a class="btn primary" href="https://github.com/" target="_blank" rel="noopener">View full README & source →</a>
+    <a class="btn ghost" href="../index.html">← Back to portfolio</a>
+  </div>
+</section>
+
+<footer class="wrap">© 2026 Chen Zhifeng · Agentree is MIT-licensed · Python + FastAPI + Vue 3</footer>
+</body>
+</html>

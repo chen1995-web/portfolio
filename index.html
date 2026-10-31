@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chen Zhifeng — AI features, shipped (not demoed)</title>
+<meta name="description" content="Senior full-stack engineer for AI projects: multi-agent systems, RAG, billing, web performance. Working product, passing tests, real numbers. Python + FastAPI.">
+<style>
+  :root{
+    --bg:#0b1220; --card:#111c2e; --line:#24334d;
+    --fg:#e2e8f0; --muted:#94a3b8; --dim:#64748b;
+    --accent:#34d399; --accent2:#38bdf8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  nav{display:flex;align-items:center;justify-content:space-between;padding:20px 0;border-bottom:1px solid var(--line)}
+  nav .brand{font-weight:800;letter-spacing:-.02em}
+  nav .brand span{color:var(--accent)}
+  nav .links{display:flex;gap:22px}
+  nav .links a{color:var(--muted);font-size:14px}
+  header{padding:60px 0 40px}
+  .tag{display:inline-flex;align-items:center;gap:8px;background:#0c2018;border:1px solid #1f4d3a;color:var(--accent);padding:6px 12px;border-radius:999px;font-size:13px;font-weight:600}
+  h1{font-size:clamp(34px,6vw,56px);line-height:1.05;letter-spacing:-.03em;margin:22px 0 0}
+  h1 .grad{background:linear-gradient(90deg,#34d399,#38bdf8);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .lede{font-size:19px;color:var(--muted);max-width:660px;margin:20px 0 0}
+  .lede b{color:var(--fg)}
+  .cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:28px}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 22px;border-radius:10px;font-weight:700;font-size:15px;transition:.15s}
+  .btn.primary{background:var(--accent);color:#04231a}
+  .btn.primary:hover{background:#22c08a;text-decoration:none}
+  .btn.ghost{background:var(--card);color:var(--fg);border:1px solid var(--line)}
+  .btn.ghost:hover{border-color:var(--accent);text-decoration:none}
+  section{padding:42px 0}
+  h2{font-size:24px;letter-spacing:-.02em;margin:0 0 6px}
+  h2 .num{color:var(--accent)}
+  .sub{color:var(--muted);margin:0 0 24px}
+  /* scenario cards */
+  .scenarios{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .scn{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;transition:.15s}
+  .scn:hover{border-color:#2f4a3d;transform:translateY(-2px)}
+  .scn .if{font-size:13px;color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+  .scn h3{margin:6px 0 8px;font-size:17px}
+  .scn .then{color:var(--muted);font-size:14px;margin:0 0 10px}
+  .scn .then b{color:var(--accent)}
+  .scn .go{font-size:13px;font-weight:700}
+  .scn .ic{font-size:22px;float:right}
+  /* pains */
+  .pains{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .pain{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px}
+  .pain .q{font-size:14.5px;font-weight:700;margin-bottom:8px}
+  .pain .q::before{content:"痛点 · ";color:var(--dim);font-weight:400;font-size:11px;text-transform:uppercase;letter-spacing:.05em}
+  .pain .a{color:var(--muted);font-size:13.5px}
+  .pain .a::before{content:"我怎么解 · ";color:var(--accent);font-weight:700;font-size:11px}
+  /* grid cards */
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px;transition:.15s}
+  .card:hover{border-color:#2f4a3d;transform:translateY(-2px)}
+  .card .ic{font-size:26px}
+  .card .meta{color:var(--dim);font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px}
+  .card h3{margin:0 0 8px;font-size:18px}
+  .card p{color:var(--muted);font-size:14px;margin:0 0 14px}
+  .card .nums{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+  .chip{background:#0c2018;border:1px solid #1f4d3a;color:var(--accent);font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px}
+  .chip.b{background:#0c2330;border-color:#1f3d52;color:var(--accent2)}
+  .card .go{font-weight:700;font-size:14px}
+  /* process */
+  .proc{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:8px}
+  .step{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;position:relative}
+  .step .n{font-size:12px;font-weight:800;color:var(--accent);letter-spacing:.06em}
+  .step h3{margin:8px 0 6px;font-size:15.5px}
+  .step p{color:var(--muted);font-size:13px;margin:0}
+  .step::after{content:"→";position:absolute;right:-12px;top:50%;transform:translateY(-50%);color:var(--dim);font-size:18px}
+  .step:last-child::after{content:""}
+  .feat{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .feat div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px}
+  .feat b{color:var(--accent)}
+  .feat p{color:var(--muted);font-size:14px;margin:6px 0 0}
+  .work{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .work .opt{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px}
+  .work .opt h3{margin:0 0 6px;font-size:16px}
+  .work .opt .price{color:var(--accent);font-weight:800;font-size:15px;margin-bottom:8px;display:block}
+  .work .opt p{color:var(--muted);font-size:13.5px;margin:0}
+  footer{border-top:1px solid var(--line);padding:40px 0 60px;color:var(--dim);font-size:14px}
+  footer .row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px}
+  @media(max-width:760px){.scenarios,.pains,.grid,.proc,.feat,.work{grid-template-columns:1fr}.step::after{content:""}nav.links{display:none}}
+</style>
+</head>
+<body>
+<nav class="wrap">
+  <div class="brand">Zhi<span>Feng</span> · Chen</div>
+  <div class="links">
+    <a href="#scenarios">Scenarios</a>
+    <a href="#work">Work</a>
+    <a href="#process">Process</a>
+    <a href="#work-with-me">Work with me</a>
+  </div>
+</nav>
+
+<header class="wrap">
+  <span class="tag">● Taking freelance AI projects · available now</span>
+  <h1>AI features, <span class="grad">shipped</span> — not demoed.</h1>
+  <p class="lede">You're adding an AI feature and you need it <b>working</b>, not a slide deck.
+  I'm a senior full-stack engineer who takes an idea and delivers a running, tested product —
+  multi-agent systems, document Q&amp;A, billing, web performance. One person, end to end.</p>
+  <div class="cta">
+    <a class="btn primary" href="#scenarios">Find your scenario ↓</a>
+    <a class="btn ghost" href="#work-with-me">How to start</a>
+  </div>
+</header>
+
+<section class="wrap" id="scenarios">
+  <h2>Pick your scenario</h2>
+  <p class="sub">Four things founders &amp; teams ask me for. One of them is probably yours.</p>
+  <div class="scenarios">
+    <div class="scn">
+      <span class="ic">🧩</span>
+      <div class="if">Scenario 1</div>
+      <h3>"I want an AI agent that does the work."</h3>
+      <p class="then">An agent that plans, uses tools, and spawns sub-agents to parallelize — with guardrails on cost. <b>See Agentree →</b></p>
+      <a class="go" href="projects/agentree.html">View project</a>
+    </div>
+    <div class="scn">
+      <span class="ic">📚</span>
+      <div class="if">Scenario 2</div>
+      <h3>"I have a pile of documents nobody reads."</h3>
+      <p class="then">Drop in your PDFs, get cited answers. Hybrid search that beats pure vector by 10%. <b>See RAG Doc Chat →</b></p>
+      <a class="go" href="projects/rag-doc-chat.html">View project</a>
+    </div>
+    <div class="scn">
+      <span class="ic">💳</span>
+      <div class="if">Scenario 3</div>
+      <h3>"I need subscriptions that don't lose money."</h3>
+      <p class="then">Stripe → webhook → entitlements, idempotent and reconciled. The whole money loop. <b>See SaaS Billing →</b></p>
+      <a class="go" href="projects/saas-billing.html">View project</a>
+    </div>
+    <div class="scn">
+      <span class="ic">⚡</span>
+      <div class="if">Scenario 4</div>
+      <h3>"My site feels slow and I can't prove why."</h3>
+      <p class="then">A real before/after: LCP −52%, CLS −82%. A 14-rule analyzer that turns "feels slow" into fixes. <b>See WebVitals →</b></p>
+      <a class="go" href="projects/webvitals-case-study.html">View project</a>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <h2>If you've been burned like this…</h2>
+  <p class="sub">I built my delivery model around the ways AI freelance projects go wrong.</p>
+  <div class="pains">
+    <div class="pain">
+      <div class="q">"The last dev handed me a demo, not a product."</div>
+      <div class="a">Every project ships with passing tests and real numbers — hit rates, latency, cost.</div>
+    </div>
+    <div class="pain">
+      <div class="q">"It only worked when they demoed it on their machine."</div>
+      <div class="a">Python + FastAPI + SQLite. Runs locally for $0, deploys without a rewrite. You own it.</div>
+    </div>
+    <div class="pain">
+      <div class="q">"I was pinging a ticket queue, not the builder."</div>
+      <div class="a">You talk to the person who built it. One engineer, no handoffs.</div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap" id="work">
+  <h2>Proof, not claims</h2>
+  <p class="sub">Selected work — each with measurable results and the code behind them.</p>
+  <div class="grid">
+    <div class="card">
+      <div class="ic">🧩</div>
+      <div class="meta">★ Main project · Multi-Agent</div>
+      <h3>Agentree — Sub-Agent Orchestrator</h3>
+      <p>A minimal framework where agents recursively spawn sub-agents in isolated contexts, plus a persistent team system.</p>
+      <div class="nums"><span class="chip">28 tests ✓</span><span class="chip b">recursive spawn</span><span class="chip b">context isolation</span></div>
+      <a class="go" href="projects/agentree.html">View project →</a>
+    </div>
+    <div class="card">
+      <div class="ic">📚</div>
+      <div class="meta">RAG · Document Q&A</div>
+      <h3>RAG Doc Chat</h3>
+      <p>Cited answers from your docs. Hybrid search beats pure vector by 10% hit@1. Zero-key demo.</p>
+      <div class="nums"><span class="chip">hit@1 +10%</span><span class="chip b">hybrid search</span><span class="chip b">0-key demo</span></div>
+      <a class="go" href="projects/rag-doc-chat.html">View project →</a>
+    </div>
+    <div class="card">
+      <div class="ic">💳</div>
+      <div class="meta">Payments · SaaS Billing</div>
+      <h3>SaaS Billing — Stripe + Entitlements</h3>
+      <p>The whole money loop on one page: plan → checkout → webhook → entitlements. Idempotent, metered, tested.</p>
+      <div class="nums"><span class="chip">idempotent webhooks</span><span class="chip b">5 tests ✓</span><span class="chip b">Stripe</span></div>
+      <a class="go" href="projects/saas-billing.html">View project →</a>
+    </div>
+    <div class="card">
+      <div class="ic">⚡</div>
+      <div class="meta">Web Performance · Case Study</div>
+      <h3>WebVitals Case Study</h3>
+      <p>A real before/after: LCP 4100→1950ms, CLS 0.28→0.05, INP 540→160ms. 28 findings down to 1.</p>
+      <div class="nums"><span class="chip">LCP −52%</span><span class="chip b">46 tests ✓</span><span class="chip b">14 rules</span></div>
+      <a class="go" href="projects/webvitals-case-study.html">View project →</a>
+    </div>
+  </div>
+</section>
+
+<section class="wrap" id="process">
+  <h2>How a project with me runs</h2>
+  <p class="sub">No black box. You always know what stage you're at.</p>
+  <div class="proc">
+    <div class="step"><div class="n">01 · DISCOVER</div><h3>You tell me the goal</h3><p>One paid call. I ask what "done" means, what it must integrate with, and what success looks like. You leave with a scope.</p></div>
+    <div class="step"><div class="n">02 · BUILD</div><h3>I ship a running slice</h3><p>I build the core path end to end in Python + FastAPI, in small increments you can see. No "wait until it's done" surprises.</p></div>
+    <div class="step"><div class="n">03 · TEST</div><h3>Tests prove it works</h3><p>Passing unit tests and real numbers — hit rate, latency, cost — not my word for it.</p></div>
+    <div class="step"><div class="n">04 · HAND OVER</div><h3>You own it, running</h3><p>Deployed, documented, and in your hands. Not a demo on my machine.</p></div>
+  </div>
+</section>
+
+<section class="wrap">
+  <h2>How I work</h2>
+  <p class="sub">One boring, proven stack, end to end.</p>
+  <div class="feat">
+    <div><b>Python-first</b><p>FastAPI + SQLite + scikit-learn. Runs locally for $0, scales without a rewrite.</p></div>
+    <div><b>Tests always</b><p>Every project ships with passing tests. You're not paying to discover bugs.</p></div>
+    <div><b>Real numbers</b><p>I measure and report actual results — hit rates, latency, cost. No hand-waving.</p></div>
+  </div>
+</section>
+
+<section class="wrap" id="work-with-me">
+  <h2>Work with me</h2>
+  <p class="sub">Three ways to start. Zero upfront to figure out if we fit.</p>
+  <div class="work">
+    <div class="opt">
+      <h3>🤝 Freelance project</h3>
+      <span class="price">scoped &amp; fixed</span>
+      <p>You have a defined feature. I build it, test it, hand it over running. You own the code.</p>
+    </div>
+    <div class="opt">
+      <h3>🧪 Small pilot</h3>
+      <span class="price">$100–500 · 1–2 weeks</span>
+      <p>Not sure yet? I take one concrete slice and prove the approach on a small budget before any big commitment.</p>
+    </div>
+    <div class="opt">
+      <h3>🏢 Full-time</h3>
+      <span class="price">senior IC / AI app dev</span>
+      <p>I'm open to full-time roles focused on building AI products end to end.</p>
+    </div>
+  </div>
+  <div class="cta">
+    <a class="btn primary" href="mailto:chenzhifeng.dev@gmail.com">📧 Tell me what you're building</a>
+    <a class="btn ghost" href="#work">Browse my work first</a>
+  </div>
+</section>
+
+<footer class="wrap">
+  <div class="row">
+    <div>© 2026 Chen Zhifeng · Senior Full-Stack &amp; AI App Engineer</div>
+    <div>Built with FastAPI · Vue · zero dependencies to view</div>
+  </div>
+</footer>
+</body>
+</html>

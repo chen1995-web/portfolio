@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#34d399"/>
+    </marker>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0b1220"/>
+      <stop offset="1" stop-color="#0f172a"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="960" height="560" fill="url(#bg)"/>
+  <text x="40" y="44" fill="#e2e8f0" font-size="20" font-weight="700">Recursive Sub-Agent Tree</text>
+  <text x="40" y="68" fill="#64748b" font-size="13">One task → parallel children → each recurses · parent sees only final output · depth / steps / children capped</text>
+
+  <!-- Edges -->
+  <g stroke="#34d399" stroke-width="2" fill="none" marker-end="url(#arrow)">
+    <path d="M480,150 C480,200 300,200 300,235"/>
+    <path d="M480,150 C480,200 480,200 480,235"/>
+    <path d="M480,150 C480,200 660,200 660,235"/>
+  </g>
+  <!-- depth badges on edges -->
+  <text x="300" y="212" fill="#64748b" font-size="11">depth 0 → 1</text>
+  <text x="480" y="212" fill="#64748b" font-size="11" text-anchor="middle">depth 0 → 1</text>
+  <text x="660" y="212" fill="#64748b" font-size="11" text-anchor="middle">depth 0 → 1</text>
+
+  <!-- Parent node -->
+  <g>
+    <rect x="300" y="70" width="360" height="80" rx="12" fill="#06231c" stroke="#34d399" stroke-width="2"/>
+    <text x="480" y="100" fill="#ecfdf5" font-size="14" font-weight="700" text-anchor="middle">🧠 Parent agent</text>
+    <text x="480" y="122" fill="#6ee7b7" font-size="12" text-anchor="middle">Task: research Milvus · Qdrant · Weaviate</text>
+    <text x="480" y="140" fill="#475569" font-size="11" text-anchor="middle">spawn_parallel → 3 children · max_children=8</text>
+  </g>
+
+  <!-- Child 1: Milvus -->
+  <g>
+    <rect x="120" y="235" width="240" height="120" rx="10" fill="#0f1e2e" stroke="#38bdf8" stroke-width="1.6"/>
+    <text x="240" y="262" fill="#e2e8f0" font-size="13" font-weight="700" text-anchor="middle">🤖 Sub-agent · Milvus</text>
+    <text x="240" y="284" fill="#7dd3fc" font-size="11" text-anchor="middle">tool_call: web_search</text>
+    <text x="240" y="302" fill="#7dd3fc" font-size="11" text-anchor="middle">tool_call: read_page</text>
+    <text x="240" y="320" fill="#7dd3fc" font-size="11" text-anchor="middle">→ final output (parent only)</text>
+    <text x="240" y="338" fill="#475569" font-size="10" text-anchor="middle">own context · own steps</text>
+  </g>
+
+  <!-- Child 2: Qdrant -->
+  <g>
+    <rect x="360" y="235" width="240" height="120" rx="10" fill="#0f1e2e" stroke="#38bdf8" stroke-width="1.6"/>
+    <text x="480" y="262" fill="#e2e8f0" font-size="13" font-weight="700" text-anchor="middle">🤖 Sub-agent · Qdrant</text>
+    <text x="480" y="284" fill="#7dd3fc" font-size="11" text-anchor="middle">tool_call: web_search</text>
+    <text x="480" y="302" fill="#7dd3fc" font-size="11" text-anchor="middle">tool_call: spawn (depth+1)</text>
+    <text x="480" y="320" fill="#7dd3fc" font-size="11" text-anchor="middle">→ final output (parent only)</text>
+    <text x="480" y="338" fill="#475569" font-size="10" text-anchor="middle">own context · own steps</text>
+  </g>
+
+  <!-- Child 3: Weaviate -->
+  <g>
+    <rect x="600" y="235" width="240" height="120" rx="10" fill="#0f1e2e" stroke="#38bdf8" stroke-width="1.6"/>
+    <text x="720" y="262" fill="#e2e8f0" font-size="13" font-weight="700" text-anchor="middle">🤖 Sub-agent · Weaviate</text>
+    <text x="720" y="284" fill="#7dd3fc" font-size="11" text-anchor="middle">tool_call: web_search</text>
+    <text x="720" y="302" fill="#7dd3fc" font-size="11" text-anchor="middle">tool_call: read_page</text>
+    <text x="720" y="320" fill="#7dd3fc" font-size="11" text-anchor="middle">→ final output (parent only)</text>
+    <text x="720" y="338" fill="#475569" font-size="10" text-anchor="middle">own context · own steps</text>
+  </g>
+
+  <!-- Qdrant's own child (recursion demo) -->
+  <g stroke="#38bdf8" stroke-width="1.6" fill="none" marker-end="url(#arrow)">
+    <path d="M480,355 C480,390 480,390 480,415"/>
+  </g>
+  <g>
+    <rect x="380" y="415" width="200" height="70" rx="9" fill="#13202f" stroke="#60a5fa" stroke-width="1.4"/>
+    <text x="480" y="440" fill="#dbeafe" font-size="12" font-weight="700" text-anchor="middle">🤖 Grandchild · depth 2</text>
+    <text x="480" y="460" fill="#93c5fd" font-size="11" text-anchor="middle">nested spawn · still capped</text>
+    <text x="480" y="476" fill="#475569" font-size="10" text-anchor="middle">max_depth=2 stops recursion</text>
+  </g>
+
+  <!-- Caps / isolation callouts -->
+  <g>
+    <rect x="40" y="430" width="250" height="100" rx="10" fill="#111c2e" stroke="#334155" stroke-width="1"/>
+    <text x="56" y="456" fill="#e2e8f0" font-size="12" font-weight="700">Triple limits (guardrails)</text>
+    <text x="56" y="476" fill="#94a3b8" font-size="11">max_depth=2 · max_steps=30 · max_children=8</text>
+    <text x="56" y="494" fill="#94a3b8" font-size="11">tool results truncated before backfill</text>
+    <text x="56" y="512" fill="#94a3b8" font-size="11">prevents runaway token cost</text>
+  </g>
+  <g>
+    <rect x="670" y="430" width="250" height="100" rx="10" fill="#06231c" stroke="#34d399" stroke-width="1"/>
+    <text x="686" y="456" fill="#ecfdf5" font-size="12" font-weight="700">Context isolation</text>
+    <text x="686" y="476" fill="#6ee7b7" font-size="11">child runs in its own loop</text>
+    <text x="686" y="494" fill="#6ee7b7" font-size="11">parent never sees intermediate</text>
+    <text x="686" y="512" fill="#6ee7b7" font-size="11">tool calls — only final output</text>
+  </g>
+</svg>
