@@ -40,7 +40,7 @@ they work on GitHub Pages with no backend. The agentree & rag-doc-chat showcases
 
 ## Before you share — edit these
 
-- **Email** — search `chenzhifeng.dev@gmail.com` and replace with your real address (in `index.html`).
+- **Email** — `chenzf1995@gmail.com` in `index.html`.
 - **GitHub link** — `index.html` and each `projects/*.html` link to `https://github.com/`; point them at
   your actual repos (or remove until they exist).
 - **Name** — `Chen Zhifeng` is used as a default; change to whatever you go by.
